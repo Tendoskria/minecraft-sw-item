@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Item event SW</h1>
+      <a href="/admin" class="btn-admin">Ajouter Item, Enchantement</a>
+    </header>
+
+    <nav class="breadcrumb">
+      <a href="/">Accueil</a>
+    </nav>
+
+    <!-- Barre de recherche -->
+    <div class="search-section">
+      <form action="/search" method="GET" class="search-form">
+        <input 
+          type="text" 
+          name="q" 
+          placeholder="Rechercher par nom d'item ou enchantement..."
+          class="search-input"
+        >
+        <button type="submit" class="btn-search">🔍 Rechercher</button>
+      </form>
+    </div>
+
+    <!-- Filtres -->
+    <div class="filters">
+      <select class="filter-select">
+        <option>Regrouper par</option>
+        <option value="event">Par event</option>
+        <option value="year">Par année</option>
+      </select>
+      <button class="filter-btn">Filter ▼</button>
+    </div>
+
+    <!-- Grille d'events -->
+    <div class="events-grid">
+      <% Object.entries(events).forEach(([eventName, years]) => { %>
+        <div class="event-column">
+          <h2><%= eventName %></h2>
+          <div class="year-list">
+            <% years.forEach(yearData => { %>
+              <a href="/event/<%= eventName %>/<%= yearData.annee %>" class="year-link">
+                <%= yearData.annee %>
+              </a>
+            <% }); %>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+
+    <!-- Section placeholder -->
+    <div class="placeholder-section">
+      <p>{{eventXXXX}}</p>
+      <div class="placeholder-items">
+        <span>xxxx</span>
+        <span>xxxx</span>
+        <span>xxxx</span>
+        <span>xxxx</span>
+        <span>xxxx</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

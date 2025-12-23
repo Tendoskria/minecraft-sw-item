@@ -3,11 +3,10 @@ const pool = require('../config/database');
 class ItemModel {
   async findAll(filters = {}) {
     let query = `
-      SELECT i.*, iv.nom_item as vanilla_name, e.annee, ne.nom as event_name
+      SELECT i.*, iv.nom_item as vanilla_name, e.annee, e.event_name
       FROM item i
       LEFT JOIN item_vanilla iv ON i.id_item_vanilla = iv.id
       LEFT JOIN event e ON i.id_event = e.id
-      LEFT JOIN nom_event ne ON e.id_nom_event = ne.id
       WHERE 1=1
     `;
     
@@ -15,7 +14,7 @@ class ItemModel {
     let paramCount = 1;
     
     if (filters.event) {
-      query += ` AND ne.nom = $${paramCount}`;
+      query += ` AND e.event_name = $${paramCount}`;
       params.push(filters.event);
       paramCount++;
     }
@@ -40,11 +39,10 @@ class ItemModel {
 
   async search(query) {
     const result = await pool.query(`
-      SELECT DISTINCT i.*, iv.nom_item as vanilla_name, e.annee, ne.nom as event_name
+      SELECT DISTINCT i.*, iv.nom_item as vanilla_name, e.annee, e.event_name
       FROM item i
       LEFT JOIN item_vanilla iv ON i.id_item_vanilla = iv.id
       LEFT JOIN event e ON i.id_event = e.id
-      LEFT JOIN nom_event ne ON e.id_nom_event = ne.id
       LEFT JOIN item_enchantment ie ON i.id = ie.id_item
       LEFT JOIN enchantment en ON ie.id_enchantment = en.id
       WHERE i.nom ILIKE $1 OR en.nom ILIKE $1
@@ -56,11 +54,10 @@ class ItemModel {
 
   async findById(id) {
     const result = await pool.query(`
-      SELECT i.*, iv.nom_item as vanilla_name, e.annee, ne.nom as event_name
+      SELECT i.*, iv.nom_item as vanilla_name, e.annee, e.event_name
       FROM item i
       LEFT JOIN item_vanilla iv ON i.id_item_vanilla = iv.id
       LEFT JOIN event e ON i.id_event = e.id
-      LEFT JOIN nom_event ne ON e.id_nom_event = ne.id
       WHERE i.id = $1
     `, [id]);
     

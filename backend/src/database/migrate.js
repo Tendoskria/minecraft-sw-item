@@ -7,24 +7,15 @@ const createTables = async () => {
   
   try {
     await client.query('BEGIN');
-    
-    // Create NOM_EVENT table
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS nom_event (
-        id SERIAL PRIMARY KEY,
-        nom TEXT NOT NULL UNIQUE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-    
+     
     // Create EVENT table
     await client.query(`
       CREATE TABLE IF NOT EXISTS event (
         id SERIAL PRIMARY KEY,
-        id_nom_event INTEGER REFERENCES nom_event(id) ON DELETE CASCADE,
+        event_name TEXT NOT NULL,
         annee TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(id_nom_event, annee)
+        UNIQUE(event_name, annee)
       )
     `);
     

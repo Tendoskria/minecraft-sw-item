@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Item event SW</h1>
+      <a href="/admin" class="btn-admin">Ajouter Item, Enchantement</a>
+    </header>
+
+    <nav class="breadcrumb">
+      <a href="/">Accueil</a> / <%= eventName %>
+    </nav>
+
+    <h2 class="page-title"><%= eventName %> <%= year %></h2>
+
+    <% Object.entries(items).forEach(([category, categoryItems]) => { %>
+      <% if (categoryItems.length > 0) { %>
+        <section class="category-section">
+          <h3 class="category-title"><%= category %></h3>
+          <div class="items-grid">
+            <% categoryItems.forEach(item => { %>
+              <a href="/item/<%= item.id %>" class="item-link">
+                <%= item.nom %>
+              </a>
+            <% }); %>
+          </div>
+        </section>
+      <% } %>
+    <% }); %>
+  </div>
+</body>
+</html>

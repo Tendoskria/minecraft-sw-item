@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Item event SW</h1>
+      <a href="/admin" class="btn-admin">Ajouter Item, Enchantement</a>
+    </header>
+
+    <nav class="breadcrumb">
+      <a href="/">Accueil</a> / 
+      <a href="/event/<%= item.eventName %>/<%= item.annee %>"><%= item.eventName %></a> / 
+      <%= item.nom %>
+    </nav>
+
+    <div class="item-details">
+      <h2><%= item.nom %></h2>
+
+      <div class="detail-section">
+        <p><strong>Event :</strong> <%= item.eventName %> <%= item.annee %></p>
+      </div>
+
+      <div class="detail-section">
+        <p><strong>Nom :</strong> <%= item.nom %></p>
+      </div>
+
+      <% if (item.enchantments && item.enchantments.length > 0) { %>
+        <div class="detail-section">
+          <p><strong>Echantements :</strong></p>
+          <ul class="enchantments-list">
+            <% item.enchantments.forEach(ench => { %>
+              <li>
+                <%= ench.nom %><%= ench.level ? ' ' + ench.level : '' %>
+              </li>
+            <% }); %>
+          </ul>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>

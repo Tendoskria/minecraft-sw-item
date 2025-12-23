@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administration</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Item event SW</h1>
+    </header>
+
+    <nav class="breadcrumb">
+      <a href="/">Accueil</a> / Ajout
+    </nav>
+
+    <div class="admin-tabs">
+      <button class="tab-btn active" data-tab="event">Créer un event</button>
+      <button class="tab-btn" data-tab="item">Créer un item</button>
+      <button class="tab-btn" data-tab="enchantment">Créer un enchantement</button>
+    </div>
+
+    <!-- Tab Event -->
+    <div class="tab-content active" id="tab-event">
+      <h2>Nouvel Event</h2>
+      <form action="/admin/event" method="POST" class="admin-form">
+        <div class="form-group">
+          <label>Nom de l'event</label>
+          <input type="text" name="eventName" required placeholder="Ex: Noel, Halloween">
+        </div>
+        <div class="form-group">
+          <label>Année</label>
+          <input type="text" name="year" required placeholder="2025" maxlength="4">
+        </div>
+        <button type="submit" class="btn-submit">Créer l'event</button>
+      </form>
+    </div>
+
+    <!-- Tab Item -->
+    <div class="tab-content" id="tab-item">
+      <h2>Nouvel item</h2>
+      <form action="/admin/item" method="POST" class="admin-form">
+        <div class="form-group">
+          <label>Nom de l'item</label>
+          <input type="text" name="itemName" required>
+        </div>
+        <div class="form-group">
+          <label>Item Vanilla</label>
+          <input type="text" name="vanillaItem" placeholder="diamond_sword">
+        </div>
+        <div class="form-group">
+          <label>Event associé</label>
+          <select name="eventId" required>
+            <option value="">Sélectionner un event</option>
+            <% events.forEach(event => { %>
+              <option value="<%= event.id %>">
+                <%= event.nom %> <%= event.annee %>
+              </option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Catégorie</label>
+          <select name="category">
+            <option value="Caisse">Caisse</option>
+            <option value="Quetes">Quetes</option>
+            <option value="Autres">Autres</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Enchantements</label>
+          <div class="enchantment-list">
+            <div class="enchantment-pill">Solidité III <button type="button">×</button></div>
+            <div class="enchantment-pill">Protection IV <button type="button">×</button></div>
+            <button type="button" class="btn-add-ench">+</button>
+          </div>
+          <textarea name="enchantments" placeholder="sharpness 5&#10;unbreaking 3" rows="4"></textarea>
+          <small>Un enchantement par ligne (nom niveau)</small>
+        </div>
+        <button type="submit" class="btn-submit">Créer l'item</button>
+      </form>
+
+      <!-- Modal pour ajouter enchantement -->
+      <div class="modal" id="enchantment-modal" style="display: none;">
+        <div class="modal-content">
+          <h3>Nouvel item</h3>
+          <div class="form-group">
+            <label>Nom de l'item</label>
+            <input type="text">
+          </div>
+          <div class="modal-enchantment-section">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Enchantement</label>
+                <select>
+                  <option>Sélectionner...</option>
+                  <% enchantments.forEach(ench => { %>
+                    <option><%= ench.nom %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Level</label>
+                <input type="number" min="1">
+              </div>
+            </div>
+            <button type="button" class="btn-add">Ajouter</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Enchantement -->
+    <div class="tab-content" id="tab-enchantment">
+      <h2>Nouvel enchantement</h2>
+      <form action="/admin/enchantment" method="POST" class="admin-form">
+        <div class="form-group">
+          <label>Nom de l'enchantement</label>
+          <input type="text" name="enchantmentName" required>
+        </div>
+        <div class="form-group">
+          <label>Level (optionnel)</label>
+          <input type="number" name="level" min="1">
+        </div>
+        <button type="submit" class="btn-submit">Créer l'enchantement</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Gestion des tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
