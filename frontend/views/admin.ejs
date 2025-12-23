@@ -41,7 +41,7 @@
     <!-- Tab Item -->
     <div class="tab-content" id="tab-item">
       <h2>Nouvel item</h2>
-      <form action="/admin/item" method="POST" class="admin-form">
+      <form action="/admin/item" method="POST" class="admin-form" id="item-form">
         <div class="form-group">
           <label>Nom de l'item</label>
           <input type="text" name="itemName" required>
@@ -56,7 +56,7 @@
             <option value="">Sélectionner un event</option>
             <% events.forEach(event => { %>
               <option value="<%= event.id %>">
-                <%= event.nom %> <%= event.annee %>
+                <%= event.event_name %> <%= event.year %>
               </option>
             <% }); %>
           </select>
@@ -71,45 +71,13 @@
         </div>
         <div class="form-group">
           <label>Enchantements</label>
-          <div class="enchantment-list">
-            <div class="enchantment-pill">Solidité III <button type="button">×</button></div>
-            <div class="enchantment-pill">Protection IV <button type="button">×</button></div>
-            <button type="button" class="btn-add-ench">+</button>
+          <div class="enchantment-list" id="enchantment-pills">
+            <button type="button" class="btn-add-ench" id="add-ench-btn">+</button>
           </div>
-          <textarea name="enchantments" placeholder="sharpness 5&#10;unbreaking 3" rows="4"></textarea>
-          <small>Un enchantement par ligne (nom niveau)</small>
+          <textarea name="enchantments" id="enchantments-textarea" style="display: none;"></textarea>
         </div>
         <button type="submit" class="btn-submit">Créer l'item</button>
       </form>
-
-      <!-- Modal pour ajouter enchantement -->
-      <div class="modal" id="enchantment-modal" style="display: none;">
-        <div class="modal-content">
-          <h3>Nouvel item</h3>
-          <div class="form-group">
-            <label>Nom de l'item</label>
-            <input type="text">
-          </div>
-          <div class="modal-enchantment-section">
-            <div class="form-row">
-              <div class="form-group">
-                <label>Enchantement</label>
-                <select>
-                  <option>Sélectionner...</option>
-                  <% enchantments.forEach(ench => { %>
-                    <option><%= ench.nom %></option>
-                  <% }); %>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Level</label>
-                <input type="number" min="1">
-              </div>
-            </div>
-            <button type="button" class="btn-add">Ajouter</button>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Tab Enchantement -->
@@ -129,6 +97,32 @@
     </div>
   </div>
 
+  <!-- Modal pour ajouter enchantement (HORS du formulaire) -->
+  <div class="modal" id="enchantment-modal" style="display: none;">
+    <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <h3>Ajouter un enchantement</h3>
+      <div class="modal-enchantment-section">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Enchantement</label>
+            <select id="modal-enchantment-select">
+              <option value="">Sélectionner...</option>
+              <% enchantments.forEach(ench => { %>
+                <option value="<%= ench.name %>"><%= ench.name %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Level</label>
+            <input type="number" id="modal-enchantment-level" min="1" max="10" placeholder="5">
+          </div>
+        </div>
+        <button type="button" class="btn-add" id="modal-add-btn">Ajouter</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Gestion des tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -140,6 +134,107 @@
         document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
       });
     });
+
+    // Gestion du modal d'enchantement
+    const addEnchBtn = document.getElementById('add-ench-btn');
+    const enchModal = document.getElementById('enchantment-modal');
+    const modalClose = document.querySelector('.modal-close');
+    const modalAddBtn = document.getElementById('modal-add-btn');
+    const enchantmentPills = document.getElementById('enchantment-pills');
+    const enchantmentsTextarea = document.getElementById('enchantments-textarea');
+    
+    let selectedEnchantments = [];
+
+    // Ouvrir le modal
+    if (addEnchBtn) {
+      addEnchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Opening modal...');
+        enchModal.style.display = 'flex';
+      });
+    }
+
+    // Fermer le modal avec X
+    if (modalClose) {
+      modalClose.addEventListener('click', () => {
+        enchModal.style.display = 'none';
+      });
+    }
+
+    // Fermer le modal en cliquant à l'extérieur
+    if (enchModal) {
+      enchModal.addEventListener('click', (e) => {
+        if (e.target === enchModal) {
+          enchModal.style.display = 'none';
+        }
+      });
+    }
+
+    // Ajouter un enchantement
+    if (modalAddBtn) {
+      modalAddBtn.addEventListener('click', () => {
+        const enchSelect = document.getElementById('modal-enchantment-select');
+        const levelInput = document.getElementById('modal-enchantment-level');
+        
+        const enchName = enchSelect.value;
+        const enchLevel = levelInput.value;
+
+        if (!enchName) {
+          alert('Veuillez sélectionner un enchantement');
+          return;
+        }
+
+        // Ajouter à la liste
+        const enchantment = {
+          name: enchName,
+          level: enchLevel || null
+        };
+
+        selectedEnchantments.push(enchantment);
+        updateEnchantmentPills();
+        updateEnchantmentsTextarea();
+
+        // Fermer le modal et réinitialiser
+        enchModal.style.display = 'none';
+        enchSelect.value = '';
+        levelInput.value = '';
+      });
+    }
+
+    // Mettre à jour les pills
+    function updateEnchantmentPills() {
+      // Garder le bouton +
+      const addBtn = document.getElementById('add-ench-btn');
+      enchantmentPills.innerHTML = '';
+      
+      selectedEnchantments.forEach((ench, index) => {
+        const pill = document.createElement('div');
+        pill.className = 'enchantment-pill';
+        pill.innerHTML = `
+          ${ench.name}${ench.level ? ' ' + ench.level : ''} 
+          <button type="button" onclick="removeEnchantment(${index})">×</button>
+        `;
+        enchantmentPills.appendChild(pill);
+      });
+
+      // Remettre le bouton +
+      enchantmentPills.appendChild(addBtn);
+    }
+
+    // Mettre à jour le textarea caché
+    function updateEnchantmentsTextarea() {
+      const text = selectedEnchantments
+        .map(ench => `${ench.name}${ench.level ? ' ' + ench.level : ''}`)
+        .join('\n');
+      enchantmentsTextarea.value = text;
+    }
+
+    // Supprimer un enchantement
+    window.removeEnchantment = function(index) {
+      selectedEnchantments.splice(index, 1);
+      updateEnchantmentPills();
+      updateEnchantmentsTextarea();
+    };
   </script>
 </body>
 </html>

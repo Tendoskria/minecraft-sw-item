@@ -15,19 +15,18 @@
 
     <nav class="breadcrumb">
       <a href="/">Accueil</a> / 
-      <a href="/event/<%= item.eventName %>/<%= item.annee %>"><%= item.eventName %></a> / 
-      <%= item.nom %>
+      <a href="/event/<%= item.eventName %>/<%= item.year %>"><%= item.eventName % ><%= item.year %></a> / <%= item.name %>
     </nav>
 
     <div class="item-details">
-      <h2><%= item.nom %></h2>
+      <h2><%= item.name %></h2>
 
       <div class="detail-section">
-        <p><strong>Event :</strong> <%= item.eventName %> <%= item.annee %></p>
+        <p><strong>Event :</strong> <%= item.eventName %> <%= item.year %></p>
       </div>
 
       <div class="detail-section">
-        <p><strong>Nom :</strong> <%= item.nom %></p>
+        <p><strong>Nom :</strong> <%= item.name %></p>
       </div>
 
       <% if (item.enchantments && item.enchantments.length > 0) { %>
@@ -36,7 +35,7 @@
           <ul class="enchantments-list">
             <% item.enchantments.forEach(ench => { %>
               <li>
-                <%= ench.nom %><%= ench.level ? ' ' + ench.level : '' %>
+                <%= ench.name %><%= ench.level ? ' ' + ench.level : '' %>
               </li>
             <% }); %>
           </ul>

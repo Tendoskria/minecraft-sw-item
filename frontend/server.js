@@ -19,7 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 // API Helper
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 10000
+  timeout: 10000,
+  proxy: false
 });
 
 // Middleware pour passer l'API_URL aux vues
@@ -93,7 +94,7 @@ app.get('/item/:id', async (req, res) => {
     
     res.render('item', {
       item,
-      title: item.nom
+      title: item.name
     });
   } catch (error) {
     console.error('Error loading item:', error);
@@ -162,7 +163,7 @@ app.post('/admin/event', async (req, res) => {
     // Créer l'event
     await api.post('/events', {
       eventName: eventName,
-      annee: year
+      year: year
     });
     
     res.redirect('/admin?success=event');
@@ -182,13 +183,13 @@ app.post('/admin/item', async (req, res) => {
       .map(line => {
         const parts = line.trim().split(' ');
         return {
-          nom: parts[0],
+          name: parts[0],
           level: parts[1] ? parseInt(parts[1]) : null
         };
       }) : [];
     
     await api.post('/items', {
-      nom: itemName,
+      name: itemName,
       id_event: eventId,
       id_item_vanilla: vanillaItem || null,
       category: category || 'Autres',
@@ -207,7 +208,7 @@ app.post('/admin/enchantment', async (req, res) => {
     const { enchantmentName, level } = req.body;
     
     await api.post('/enchantments', {
-      nom: enchantmentName,
+      name: enchantmentName,
       level: level ? parseInt(level) : null
     });
     

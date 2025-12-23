@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   if (addEnchBtn && enchModal) {
     addEnchBtn.addEventListener('click', () => {
+      console.log('Ouvrir modal enchantement');
       enchModal.style.display = 'flex';
     });
 

@@ -13,9 +13,9 @@ const createTables = async () => {
       CREATE TABLE IF NOT EXISTS event (
         id SERIAL PRIMARY KEY,
         event_name TEXT NOT NULL,
-        annee TEXT NOT NULL,
+        year TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(event_name, annee)
+        UNIQUE(event_name, year)
       )
     `);
     
@@ -23,7 +23,7 @@ const createTables = async () => {
     await client.query(`
       CREATE TABLE IF NOT EXISTS item_vanilla (
         id SERIAL PRIMARY KEY,
-        nom_item TEXT NOT NULL UNIQUE,
+        item_name TEXT NOT NULL UNIQUE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -32,7 +32,7 @@ const createTables = async () => {
     await client.query(`
       CREATE TABLE IF NOT EXISTS item (
         id SERIAL PRIMARY KEY,
-        nom TEXT NOT NULL,
+        name TEXT NOT NULL,
         id_event INTEGER REFERENCES event(id) ON DELETE CASCADE,
         id_item_vanilla INTEGER REFERENCES item_vanilla(id),
         category TEXT DEFAULT 'Autres',
@@ -44,7 +44,7 @@ const createTables = async () => {
     await client.query(`
       CREATE TABLE IF NOT EXISTS enchantment (
         id SERIAL PRIMARY KEY,
-        nom TEXT NOT NULL UNIQUE,
+        name TEXT NOT NULL UNIQUE,
         level INTEGER,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
@@ -60,9 +60,9 @@ const createTables = async () => {
     `);
     
     // Create indexes
-    await client.query('CREATE INDEX IF NOT EXISTS idx_event_annee ON event(annee)');
-    await client.query('CREATE INDEX IF NOT EXISTS idx_item_nom ON item(nom)');
-    await client.query('CREATE INDEX IF NOT EXISTS idx_enchantment_nom ON enchantment(nom)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_event_year ON event(year)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_item_name ON item(name)');
+    await client.query('CREATE INDEX IF NOT EXISTS idx_enchantment_name ON enchantment(name)');
     
     await client.query('COMMIT');
     console.log('Tables created successfully');

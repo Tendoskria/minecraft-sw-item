@@ -3,7 +3,7 @@ const pool = require('../config/database');
 class ItemModel {
   async findAll(filters = {}) {
     let query = `
-      SELECT i.*, iv.nom_item as vanilla_name, e.annee, e.event_name
+      SELECT i.*, iv.item_name as vanilla_name, e.year, e.event_name
       FROM item i
       LEFT JOIN item_vanilla iv ON i.id_item_vanilla = iv.id
       LEFT JOIN event e ON i.id_event = e.id
@@ -20,7 +20,7 @@ class ItemModel {
     }
     
     if (filters.year) {
-      query += ` AND e.annee = $${paramCount}`;
+      query += ` AND e.year = $${paramCount}`;
       params.push(filters.year);
       paramCount++;
     }
@@ -31,7 +31,7 @@ class ItemModel {
       paramCount++;
     }
     
-    query += ' ORDER BY i.nom ASC';
+    query += ' ORDER BY i.name ASC';
     
     const result = await pool.query(query, params);
     return result.rows;
@@ -39,14 +39,14 @@ class ItemModel {
 
   async search(query) {
     const result = await pool.query(`
-      SELECT DISTINCT i.*, iv.nom_item as vanilla_name, e.annee, e.event_name
+      SELECT DISTINCT i.*, iv.item_name as vanilla_name, e.year, e.event_name
       FROM item i
       LEFT JOIN item_vanilla iv ON i.id_item_vanilla = iv.id
       LEFT JOIN event e ON i.id_event = e.id
       LEFT JOIN item_enchantment ie ON i.id = ie.id_item
       LEFT JOIN enchantment en ON ie.id_enchantment = en.id
-      WHERE i.nom ILIKE $1 OR en.nom ILIKE $1
-      ORDER BY i.nom ASC
+      WHERE i.name ILIKE $1 OR en.name ILIKE $1
+      ORDER BY i.name ASC
     `, [`%${query}%`]);
     
     return result.rows;
@@ -54,7 +54,7 @@ class ItemModel {
 
   async findById(id) {
     const result = await pool.query(`
-      SELECT i.*, iv.nom_item as vanilla_name, e.annee, e.event_name
+      SELECT i.*, iv.item_name as vanilla_name, e.year, e.event_name
       FROM item i
       LEFT JOIN item_vanilla iv ON i.id_item_vanilla = iv.id
       LEFT JOIN event e ON i.id_event = e.id
@@ -65,19 +65,19 @@ class ItemModel {
   }
 
   async create(data) {
-    const { nom, id_event, id_item_vanilla, category } = data;
+    const { name, id_event, id_item_vanilla, category } = data;
     const result = await pool.query(
-      'INSERT INTO item (nom, id_event, id_item_vanilla, category) VALUES ($1, $2, $3, $4) RETURNING *',
-      [nom, id_event, id_item_vanilla, category]
+      'INSERT INTO item (name, id_event, id_item_vanilla, category) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, id_event, id_item_vanilla, category]
     );
     return result.rows[0];
   }
 
   async update(id, data) {
-    const { nom, id_event, id_item_vanilla, category } = data;
+    const { name, id_event, id_item_vanilla, category } = data;
     const result = await pool.query(
-      'UPDATE item SET nom = $1, id_event = $2, id_item_vanilla = $3, category = $4 WHERE id = $5 RETURNING *',
-      [nom, id_event, id_item_vanilla, category, id]
+      'UPDATE item SET name = $1, id_event = $2, id_item_vanilla = $3, category = $4 WHERE id = $5 RETURNING *',
+      [name, id_event, id_item_vanilla, category, id]
     );
     return result.rows[0];
   }
@@ -88,11 +88,11 @@ class ItemModel {
 
   async getEnchantments(itemId) {
     const result = await pool.query(`
-      SELECT e.id, e.nom, e.level
+      SELECT e.id, e.name, e.level
       FROM enchantment e
       JOIN item_enchantment ie ON e.id = ie.id_enchantment
       WHERE ie.id_item = $1
-      ORDER BY e.nom ASC
+      ORDER BY e.name ASC
     `, [itemId]);
     
     return result.rows;

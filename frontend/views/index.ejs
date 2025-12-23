@@ -47,8 +47,8 @@
           <h2><%= eventName %></h2>
           <div class="year-list">
             <% years.forEach(yearData => { %>
-              <a href="/event/<%= eventName %>/<%= yearData.annee %>" class="year-link">
-                <%= yearData.annee %>
+              <a href="/event/<%= eventName %>/<%= yearData.year %>" class="year-link">
+                <%= yearData.year %>
               </a>
             <% }); %>
           </div>

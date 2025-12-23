@@ -19,14 +19,14 @@ class ItemService {
   }
 
   async create(data) {
-    const { nom, id_event, id_item_vanilla, category, enchantments } = data;
+    const { name, id_event, id_item_vanilla, category, enchantments } = data;
     
-    if (!nom || !id_event) {
+    if (!name || !id_event) {
       throw new Error('Item name and event ID are required');
     }
     
     const item = await ItemModel.create({
-      nom,
+      name,
       id_event,
       id_item_vanilla: id_item_vanilla || null,
       category: category || 'Autres'
@@ -35,11 +35,11 @@ class ItemService {
     // Add enchantments if provided
     if (enchantments && Array.isArray(enchantments)) {
       for (const enchData of enchantments) {
-        let enchantment = await EnchantmentModel.findByName(enchData.nom);
+        let enchantment = await EnchantmentModel.findByName(enchData.name);
         
         if (!enchantment) {
           enchantment = await EnchantmentModel.create({
-            nom: enchData.nom,
+            name: enchData.name,
             level: enchData.level || null
           });
         }
@@ -60,11 +60,11 @@ class ItemService {
       
       // Add new enchantments
       for (const enchData of data.enchantments) {
-        let enchantment = await EnchantmentModel.findByName(enchData.nom);
+        let enchantment = await EnchantmentModel.findByName(enchData.name);
         
         if (!enchantment) {
           enchantment = await EnchantmentModel.create({
-            nom: enchData.nom,
+            name: enchData.name,
             level: enchData.level || null
           });
         }

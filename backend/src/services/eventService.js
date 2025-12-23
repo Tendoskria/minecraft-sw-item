@@ -16,7 +16,7 @@ class EventService {
       grouped[event.event_name].push({
         id: event.id,
         eventName: event.event_name,
-        annee: event.annee,
+        year: event.year,
         created_at: event.created_at
       });
     });
@@ -30,17 +30,17 @@ class EventService {
 
   async create(data) {
     console.log('Creating event with data:', data);
-    const { eventName: eventName, annee } = data;
+    const { eventName: eventName, year } = data;
     
-    if (!eventName || !annee) {
+    if (!eventName || !year) {
       throw new Error('Event name ID and year are required');
     }
     
-    if (annee.length !== 4 || isNaN(annee)) {
+    if (year.length !== 4 || isNaN(year)) {
       throw new Error('Year must be a 4-digit number');
     }
     
-    return await EventModel.create({ eventName: eventName, annee });
+    return await EventModel.create({ eventName: eventName, year });
   }
 
   async update(id, data) {

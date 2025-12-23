@@ -3,7 +3,7 @@ const pool = require('../config/database');
 class EnchantmentModel {
   async findAll() {
     const result = await pool.query(
-      'SELECT * FROM enchantment ORDER BY nom ASC'
+      'SELECT * FROM enchantment ORDER BY name ASC'
     );
     return result.rows;
   }
@@ -16,28 +16,28 @@ class EnchantmentModel {
     return result.rows[0];
   }
 
-  async findByName(nom) {
+  async findByName(name) {
     const result = await pool.query(
-      'SELECT * FROM enchantment WHERE nom = $1',
-      [nom]
+      'SELECT * FROM enchantment WHERE name = $1',
+      [name]
     );
     return result.rows[0];
   }
 
   async create(data) {
-    const { nom, level } = data;
+    const { name, level } = data;
     const result = await pool.query(
-      'INSERT INTO enchantment (nom, level) VALUES ($1, $2) RETURNING *',
-      [nom, level]
+      'INSERT INTO enchantment (name, level) VALUES ($1, $2) RETURNING *',
+      [name, level]
     );
     return result.rows[0];
   }
 
   async update(id, data) {
-    const { nom, level } = data;
+    const { name, level } = data;
     const result = await pool.query(
-      'UPDATE enchantment SET nom = $1, level = $2 WHERE id = $3 RETURNING *',
-      [nom, level, id]
+      'UPDATE enchantment SET name = $1, level = $2 WHERE id = $3 RETURNING *',
+      [name, level, id]
     );
     return result.rows[0];
   }

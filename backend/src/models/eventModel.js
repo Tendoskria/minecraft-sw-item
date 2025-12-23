@@ -3,16 +3,16 @@ const pool = require('../config/database');
 class EventModel {
   async findAll() {
     const result = await pool.query(
-      'SELECT * FROM event ORDER BY annee DESC'
+      'SELECT * FROM event ORDER BY year DESC'
     );
     return result.rows;
   }
 
   async findAllWithNames() {
     const result = await pool.query(`
-      SELECT e.id, e.event_name, e.annee, e.created_at
+      SELECT e.id, e.event_name, e.year, e.created_at
       FROM event e
-      ORDER BY e.event_name ASC, e.annee DESC
+      ORDER BY e.event_name ASC, e.year DESC
     `);
     return result.rows;
   }
@@ -25,28 +25,28 @@ class EventModel {
     return result.rows[0];
   }
 
-  async findByNameAndYear(nomEvent, annee) {
+  async findByNameAndYear(eventName, year) {
     const result = await pool.query(
-      'SELECT * FROM event WHERE event_name = $1 AND annee = $2',
-      [nomEvent, annee]
+      'SELECT * FROM event WHERE event_name = $1 AND year = $2',
+      [eventName, year]
     );
     return result.rows[0];
   }
 
   async create(data) {
-    const { eventName, annee } = data;
+    const { eventName, year } = data;
     const result = await pool.query(
-      'INSERT INTO event (event_name, annee) VALUES ($1, $2) RETURNING *',
-      [eventName, annee]
+      'INSERT INTO event (event_name, year) VALUES ($1, $2) RETURNING *',
+      [eventName, year]
     );
     return result.rows[0];
   }
 
   async update(id, data) {
-    const { eventName, annee } = data;
+    const { eventName, year } = data;
     const result = await pool.query(
-      'UPDATE event SET event_name = $1, annee = $2 WHERE id = $3 RETURNING *',
-      [eventName, annee, id]
+      'UPDATE event SET event_name = $1, year = $2 WHERE id = $3 RETURNING *',
+      [eventName, year, id]
     );
     return result.rows[0];
   }
