@@ -15,14 +15,14 @@
 
     <nav class="breadcrumb">
       <a href="/">Accueil</a> / 
-      <a href="/event/<%= item.eventName %>/<%= item.year %>"><%= item.eventName % ><%= item.year %></a> / <%= item.name %>
+      <a href="/event/<%= item.event_name %>/<%= item.year %>"><%= item.event_name %> <%= item.year %></a> / <%= item.name %>
     </nav>
 
     <div class="item-details">
       <h2><%= item.name %></h2>
 
       <div class="detail-section">
-        <p><strong>Event :</strong> <%= item.eventName %> <%= item.year %></p>
+        <p><strong>Event :</strong> <%= item.event_name %> <%= item.year %></p>
       </div>
 
       <div class="detail-section">

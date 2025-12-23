@@ -45,7 +45,6 @@ const createTables = async () => {
       CREATE TABLE IF NOT EXISTS enchantment (
         id SERIAL PRIMARY KEY,
         name TEXT NOT NULL UNIQUE,
-        level INTEGER,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -55,6 +54,7 @@ const createTables = async () => {
       CREATE TABLE IF NOT EXISTS item_enchantment (
         id_item INTEGER REFERENCES item(id) ON DELETE CASCADE,
         id_enchantment INTEGER REFERENCES enchantment(id) ON DELETE CASCADE,
+        level INTEGER,
         PRIMARY KEY (id_item, id_enchantment)
       )
     `);

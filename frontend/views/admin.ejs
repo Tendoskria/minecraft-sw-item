@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Administration</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
   <div class="container">
     <header>
@@ -48,22 +50,28 @@
         </div>
         <div class="form-group">
           <label>Item Vanilla</label>
-          <input type="text" name="vanillaItem" placeholder="diamond_sword">
+          <div class="autocomplete-wrapper">
+            <input type="text" id="vanilla-item-search" placeholder="Rechercher un item vanilla..." autocomplete="off">
+            <input type="hidden" name="vanillaItem" id="vanilla-item-id">
+            <div class="autocomplete-results" id="vanilla-autocomplete"></div>
+          </div>
         </div>
         <div class="form-group">
           <label>Event associé</label>
           <select name="eventId" required>
             <option value="">Sélectionner un event</option>
-            <% events.forEach(event => { %>
+            <% events.forEach(event=> { %>
               <option value="<%= event.id %>">
-                <%= event.event_name %> <%= event.year %>
+                <%= event.event_name %>
+                  <%= event.year %>
               </option>
-            <% }); %>
+              <% }); %>
           </select>
         </div>
         <div class="form-group">
           <label>Catégorie</label>
           <select name="category">
+            <option value="RecompenseEvent">Récompense event</option>
             <option value="Caisse">Caisse</option>
             <option value="Quetes">Quetes</option>
             <option value="Autres">Autres</option>
@@ -88,10 +96,6 @@
           <label>Nom de l'enchantement</label>
           <input type="text" name="enchantmentName" required>
         </div>
-        <div class="form-group">
-          <label>Level (optionnel)</label>
-          <input type="number" name="level" min="1">
-        </div>
         <button type="submit" class="btn-submit">Créer l'enchantement</button>
       </form>
     </div>
@@ -108,14 +112,16 @@
             <label>Enchantement</label>
             <select id="modal-enchantment-select">
               <option value="">Sélectionner...</option>
-              <% enchantments.forEach(ench => { %>
-                <option value="<%= ench.name %>"><%= ench.name %></option>
-              <% }); %>
+              <% enchantments.forEach(ench=> { %>
+                <option value="<%= ench.name %>">
+                  <%= ench.name %>
+                </option>
+                <% }); %>
             </select>
           </div>
           <div class="form-group">
             <label>Level</label>
-            <input type="number" id="modal-enchantment-level" min="1" max="10" placeholder="5">
+            <input type="number" id="modal-enchantment-level" min="1" max="15" placeholder="2">
           </div>
         </div>
         <button type="button" class="btn-add" id="modal-add-btn">Ajouter</button>
@@ -129,7 +135,7 @@
       btn.addEventListener('click', () => {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        
+
         btn.classList.add('active');
         document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
       });
@@ -142,7 +148,7 @@
     const modalAddBtn = document.getElementById('modal-add-btn');
     const enchantmentPills = document.getElementById('enchantment-pills');
     const enchantmentsTextarea = document.getElementById('enchantments-textarea');
-    
+
     let selectedEnchantments = [];
 
     // Ouvrir le modal
@@ -175,7 +181,7 @@
       modalAddBtn.addEventListener('click', () => {
         const enchSelect = document.getElementById('modal-enchantment-select');
         const levelInput = document.getElementById('modal-enchantment-level');
-        
+
         const enchName = enchSelect.value;
         const enchLevel = levelInput.value;
 
@@ -206,7 +212,7 @@
       // Garder le bouton +
       const addBtn = document.getElementById('add-ench-btn');
       enchantmentPills.innerHTML = '';
-      
+
       selectedEnchantments.forEach((ench, index) => {
         const pill = document.createElement('div');
         pill.className = 'enchantment-pill';
@@ -230,11 +236,64 @@
     }
 
     // Supprimer un enchantement
-    window.removeEnchantment = function(index) {
+    window.removeEnchantment = function (index) {
       selectedEnchantments.splice(index, 1);
       updateEnchantmentPills();
       updateEnchantmentsTextarea();
     };
+
+
+    const vanillaItems = <%- JSON.stringify(vanillaItems) %>;
+
+    const searchInput = document.getElementById('vanilla-item-search');
+    const resultsBox = document.getElementById('vanilla-autocomplete');
+    const hiddenInput = document.getElementById('vanilla-item-id');
+
+    searchInput.addEventListener('input', () => {
+      const value = searchInput.value.toLowerCase();
+      resultsBox.innerHTML = '';
+
+      if (value.length < 2) {
+        resultsBox.style.display = 'none';
+        return;
+      }
+
+      const matches = vanillaItems
+        .filter(item => item.item_name.toLowerCase().includes(value))
+        .slice(0, 10);
+
+      if (!matches.length) {
+        resultsBox.style.display = 'none';
+        return;
+      }
+
+      matches.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'autocomplete-item';
+        div.textContent = item.item_name;
+
+        div.addEventListener('click', () => {
+          searchInput.value = item.item_name;
+          hiddenInput.value = item.id;
+          resultsBox.innerHTML = '';
+          resultsBox.style.display = 'none';
+        });
+
+        resultsBox.appendChild(div);
+      });
+
+      resultsBox.style.display = 'block';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.autocomplete-wrapper')) {
+        resultsBox.style.display = 'none';
+      }
+    });
+
+
+
   </script>
 </body>
+
 </html>

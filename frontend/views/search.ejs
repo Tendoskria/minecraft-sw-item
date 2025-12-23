@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recherche: <%= query %></title>
+  <title>Recherche: <%= query %>
+  </title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
   <div class="container">
     <header>
@@ -15,21 +18,27 @@
     <h2>Résultats pour: "<%= query %>"</h2>
 
     <div class="search-results">
-      <% if (results.length === 0) { %>
+      <% if (results.length===0) { %>
         <p>Aucun résultat trouvé.</p>
-      <% } else { %>
-        <div class="items-grid">
-          <% results.forEach(item => { %>
-            <a href="/item/<%= item.id %>" class="item-card">
-              <h3><%= item.name %></h3>
-              <p><%= item.eventName %> <%= item.year %></p>
-            </a>
-          <% }); %>
-        </div>
-      <% } %>
+        <% } else { %>
+          <div class="items-grid">
+            <% results.forEach(item=> { %>
+              <a href="/item/<%= item.id %>" class="item-card">
+                <h3>
+                  <%= item.name %>
+                </h3>
+                <p>
+                  <%= item.event_name %>
+                    <%= item.year %>
+                </p>
+              </a>
+              <% }); %>
+          </div>
+          <% } %>
     </div>
 
     <a href="/" class="btn-back">← Retour</a>
   </div>
 </body>
+
 </html>

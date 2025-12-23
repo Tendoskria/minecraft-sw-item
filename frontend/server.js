@@ -56,16 +56,18 @@ app.get('/', async (req, res) => {
 
 // Page de détails d'un event
 app.get('/event/:eventName/:year', async (req, res) => {
+  console.log('Loading items for event:', req.params);
   try {
     const { eventName, year } = req.params;
     const itemsResponse = await api.get('/items', {
-      params: { event: eventName, year }
+      params: { eventName: eventName, year }
     });
     
     const items = itemsResponse.data;
     
     // Grouper par catégorie
     const groupedItems = {
+      RecompenseEvent: items.filter(item => item.category === 'RecompenseEvent'),
       Caisse: items.filter(item => item.category === 'Caisse'),
       Quetes: items.filter(item => item.category === 'Quetes'),
       Autres: items.filter(item => item.category === 'Autres')
@@ -92,6 +94,7 @@ app.get('/item/:id', async (req, res) => {
     const itemResponse = await api.get(`/items/${req.params.id}`);
     const item = itemResponse.data;
     
+    console.log('Loaded item:', item);
     res.render('item', {
       item,
       title: item.name
@@ -138,10 +141,12 @@ app.get('/admin', async (req, res) => {
   try {
     const eventsResponse = await api.get('/events');
     const enchantmentsResponse = await api.get('/enchantments');
+    const vanillaItemsResponse = await api.get('/vanilla-items');
     
     res.render('admin', {
       events: eventsResponse.data,
       enchantments: enchantmentsResponse.data,
+      vanillaItems: vanillaItemsResponse.data,
       title: 'Administration'
     });
   } catch (error) {
@@ -149,6 +154,7 @@ app.get('/admin', async (req, res) => {
     res.render('admin', {
       events: [],
       enchantments: [],
+      vanillaItems: [],
       title: 'Administration',
       error: 'Erreur lors du chargement'
     });
@@ -176,7 +182,7 @@ app.post('/admin/event', async (req, res) => {
 app.post('/admin/item', async (req, res) => {
   try {
     const { itemName, vanillaItem, eventId, category, enchantments } = req.body;
-    
+    console.log('Received item data:', req.body);
     // Parser les enchantements
     const enchantmentsList = enchantments ? enchantments.split('\n')
       .filter(line => line.trim())
@@ -205,11 +211,10 @@ app.post('/admin/item', async (req, res) => {
 
 app.post('/admin/enchantment', async (req, res) => {
   try {
-    const { enchantmentName, level } = req.body;
+    const { enchantmentName } = req.body;
     
     await api.post('/enchantments', {
-      name: enchantmentName,
-      level: level ? parseInt(level) : null
+      name: enchantmentName
     });
     
     res.redirect('/admin?success=enchantment');

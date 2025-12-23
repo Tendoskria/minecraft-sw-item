@@ -25,19 +25,19 @@ class EnchantmentModel {
   }
 
   async create(data) {
-    const { name, level } = data;
+    const { name } = data;
     const result = await pool.query(
-      'INSERT INTO enchantment (name, level) VALUES ($1, $2) RETURNING *',
-      [name, level]
+      'INSERT INTO enchantment (name) VALUES ($1) RETURNING *',
+      [name]
     );
     return result.rows[0];
   }
 
   async update(id, data) {
-    const { name, level } = data;
+    const { name } = data;
     const result = await pool.query(
-      'UPDATE enchantment SET name = $1, level = $2 WHERE id = $3 RETURNING *',
-      [name, level, id]
+      'UPDATE enchantment SET name = $1 WHERE id = $2 RETURNING *',
+      [name, id]
     );
     return result.rows[0];
   }

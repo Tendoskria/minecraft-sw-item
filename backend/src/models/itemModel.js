@@ -88,7 +88,7 @@ class ItemModel {
 
   async getEnchantments(itemId) {
     const result = await pool.query(`
-      SELECT e.id, e.name, e.level
+      SELECT e.id, e.name, ie.level
       FROM enchantment e
       JOIN item_enchantment ie ON e.id = ie.id_enchantment
       WHERE ie.id_item = $1
@@ -98,10 +98,10 @@ class ItemModel {
     return result.rows;
   }
 
-  async addEnchantment(itemId, enchantmentId) {
+  async addEnchantment(itemId, enchantmentId, level) {
     await pool.query(
-      'INSERT INTO item_enchantment (id_item, id_enchantment) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-      [itemId, enchantmentId]
+      'INSERT INTO item_enchantment (id_item, id_enchantment, level) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING',
+      [itemId, enchantmentId, level || null]
     );
   }
 

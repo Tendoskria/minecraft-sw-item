@@ -39,12 +39,11 @@ class ItemService {
         
         if (!enchantment) {
           enchantment = await EnchantmentModel.create({
-            name: enchData.name,
-            level: enchData.level || null
+            name: enchData.name
           });
         }
         
-        await ItemModel.addEnchantment(item.id, enchantment.id);
+        await ItemModel.addEnchantment(item.id, enchantment.id, enchData.level);
       }
     }
     
@@ -64,12 +63,11 @@ class ItemService {
         
         if (!enchantment) {
           enchantment = await EnchantmentModel.create({
-            name: enchData.name,
-            level: enchData.level || null
-          });
+            name: enchData.name
+         });
         }
         
-        await ItemModel.addEnchantment(id, enchantment.id);
+        await ItemModel.addEnchantment(id, enchantment.id, enchData.level);
       }
     }
     

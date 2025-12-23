@@ -10,13 +10,13 @@ class EnchantmentService {
   }
 
   async create(data) {
-    const { name, level } = data;
+    const { name } = data;
     
     if (!name) {
       throw new Error('Enchantment name is required');
     }
-    
-    return await EnchantmentModel.create({ name, level: level || null });
+
+    return await EnchantmentModel.create({ name: name || null });
   }
 
   async update(id, data) {
