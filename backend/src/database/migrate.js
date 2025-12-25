@@ -24,6 +24,7 @@ const createTables = async () => {
       CREATE TABLE IF NOT EXISTS item_vanilla (
         id SERIAL PRIMARY KEY,
         item_name TEXT NOT NULL UNIQUE,
+        image_url TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
