@@ -8,7 +8,7 @@ function EventCard({ symbol, title, years }: { symbol: string; title: string; ye
   };
 
   return (
-    <div className="w-[350px] h-[170px] bg-[#3A3D44] rounded-xl flex overflow-hidden">
+    <div className="w-[350px] h-[170px] bg-[#3A3D44] hover:bg-[#43464E] transition-colors rounded-xl flex overflow-hidden">
 
       {/* Left */}
       <div className="w-[30%] flex items-center justify-center relative">

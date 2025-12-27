@@ -16,7 +16,7 @@ class ItemVanillaModel {
     return result.rows;
   }
 
-  async findByName(item_name) {
+  async findByName(item_name) { 
     const result = await pool.query(
       'SELECT * FROM item_vanilla WHERE item_name = $1',
       [item_name]

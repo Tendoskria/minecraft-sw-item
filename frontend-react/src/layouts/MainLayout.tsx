@@ -1,5 +1,6 @@
-import { Outlet } from "react-router-dom"
-import BurgerMenu from "../components/BurgerMenu"
+import { Outlet } from "react-router-dom";
+import BurgerMenu from "../components/BurgerMenu";
+import SearchBar from "../components/SearchBar";
 
 function MainLayout() {
   return (
@@ -30,12 +31,21 @@ function MainLayout() {
         {/* Bottom left rectangle */}
         <div className="absolute bottom-10 left-0 bg-[#F16736] h-[3%] w-[16%]"></div>
 
+        {/* Search Bar */}
+        <div className="absolute top-30 right-0 z-30">
+          <div className="bg-[#2D3037] px-8 py-4">
+            <div className="w-[400px]">
+              <SearchBar />
+            </div>
+          </div>
+        </div>
+
         {/* Burger Menu */}
         <BurgerMenu />
 
       </div>
     </div>
-  )
+  );
 }
 
-export default MainLayout
+export default MainLayout;
