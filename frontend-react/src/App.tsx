@@ -3,6 +3,7 @@ import MainLayout from "./layouts/MainLayout"
 import ItemPage from "./pages/ItemPage"
 import EventPage from "./pages/EventPage"
 import EventItemsPage from "./pages/EventItemPages"
+import SearchResultsPage from "./pages/SearchResultPageLayout"
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/event" element={<EventPage />} />
         <Route path="/items" element={<EventItemsPage />} />
         <Route path="/items/:itemId" element={<ItemPage />} />
+        <Route path="/search" element={<SearchResultsPage />} />
       </Route>
     </Routes>
   )

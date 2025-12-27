@@ -12,10 +12,13 @@ interface SearchResult {
 function SearchBar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [totalResults, setTotalResults] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  const MAX_DROPDOWN_RESULTS = 4;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -34,6 +37,7 @@ function SearchBar() {
         performSearch(searchQuery);
       } else {
         setResults([]);
+        setTotalResults(0);
         setShowResults(false);
       }
     }, 300);
@@ -48,11 +52,13 @@ function SearchBar() {
         `http://localhost:3000/api/items/search?q=${encodeURIComponent(query)}`
       );
       const data = await response.json();
-      setResults(data);
+      setTotalResults(data.length);
+      setResults(data.slice(0, MAX_DROPDOWN_RESULTS));
       setShowResults(true);
     } catch (error) {
       console.error("Search error:", error);
       setResults([]);
+      setTotalResults(0);
     } finally {
       setLoading(false);
     }
@@ -62,6 +68,18 @@ function SearchBar() {
     navigate(`/items/${itemId}`);
     setSearchQuery("");
     setShowResults(false);
+  };
+
+  const handleShowMore = () => {
+    navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+    setShowResults(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim().length >= 2) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setShowResults(false);
+    }
   };
 
   return (
@@ -88,6 +106,7 @@ function SearchBar() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="ITEM, ENCHANTEMENT..."
           className="w-full bg-[#3A3D44] text-white placeholder-gray-400 rounded-full py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-[#F16736] uppercase text-sm font-semibold"
         />
@@ -101,29 +120,41 @@ function SearchBar() {
               Searching...
             </div>
           ) : results.length > 0 ? (
-            <div className="py-2">
-              {results.map((result) => (
+            <>
+              <div className="py-2">
+                {results.map((result) => (
+                  <button
+                    key={result.id}
+                    onClick={() => handleResultClick(result.id)}
+                    className="w-full px-4 py-3 text-left hover:bg-[#43464E] transition-colors flex flex-col"
+                  >
+                    <div className="text-white font-semibold">
+                      {result.name}
+                    </div>
+                    <div className="text-sm text-gray-400 mt-1">
+                      {result.vanilla_name && (
+                        <span>{result.vanilla_name} • </span>
+                      )}
+                      {result.event_name && result.year && (
+                        <span className="text-[#F16736]">
+                          {result.event_name} {result.year}
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+              
+              {/* Show More Button */}
+              {totalResults > MAX_DROPDOWN_RESULTS && (
                 <button
-                  key={result.id}
-                  onClick={() => handleResultClick(result.id)}
-                  className="w-full px-4 py-3 text-left hover:bg-[#43464E] transition-colors flex flex-col"
+                  onClick={handleShowMore}
+                  className="w-full px-4 py-3 text-center border-t border-gray-600 text-[#F16736] hover:bg-[#43464E] transition-colors font-semibold"
                 >
-                  <div className="text-white font-semibold">
-                    {result.name}
-                  </div>
-                  <div className="text-sm text-gray-400 mt-1">
-                    {result.vanilla_name && (
-                      <span>{result.vanilla_name} • </span>
-                    )}
-                    {result.event_name && result.year && (
-                      <span className="text-[#F16736]">
-                        {result.event_name} {result.year}
-                      </span>
-                    )}
-                  </div>
+                  Show more ({totalResults - MAX_DROPDOWN_RESULTS} more results)
                 </button>
-              ))}
-            </div>
+              )}
+            </>
           ) : (
             <div className="p-4 text-center text-gray-400">
               No results found

@@ -39,7 +39,7 @@ class ItemModel {
 
   async search(query) {
     const result = await pool.query(`
-      SELECT DISTINCT i.*, iv.item_name as vanilla_name, i.year, e.event_name
+      SELECT DISTINCT i.*, iv.item_name as vanilla_name, iv.image_url as vanilla_image_url, i.year, e.event_name
       FROM item i
       LEFT JOIN item_vanilla iv ON i.id_item_vanilla = iv.id
       LEFT JOIN event e ON i.id_event = e.id

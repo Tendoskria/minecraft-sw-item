@@ -22,8 +22,8 @@ function MainLayout() {
         </div>
 
         {/* Route content area */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="pointer-events-auto w-[80%] h-[60%] text-white">
+        <div className="absolute top-28 bottom-24 left-0 right-0 flex items-center justify-center pointer-events-none">
+          <div className="pointer-events-auto w-[80%] h-full text-white">
             <Outlet />
           </div>
         </div>
