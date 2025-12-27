@@ -1,29 +1,31 @@
 import { useEffect, useState } from "react";
 import EventCard from "../components/EventCard";
 import type { EventDto } from "../models/Event";
-import Breadcrumb from "../components/Breadcrumb";
+import PageLayout from "../layouts/PageLayout";
 
 function EventPage() {
   const [events, setEvents] = useState<EventDto[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/events")
       .then(res => res.json())
-      .then(setEvents)
-      .catch(console.error);
+      .then(data => {
+        setEvents(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   return (
-    <div>
-      <Breadcrumb
-        items={[
-          { label: "ACCUEIL", path: "/" }
-        ]}
-      />
-      <div className="mb-6">
-        <h1 className="text-4xl font-bold mb-2">Evenements</h1>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 justify-center items-center">
+    <PageLayout
+      title="Evenements"
+      breadcrumbItems={[{ label: "ACCUEIL", path: "/" }]}
+      loading={loading}
+      isEmpty={events.length === 0}
+      emptyMessage="No events found"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
         {events.map(event => (
           <EventCard
             key={event.id}
@@ -33,8 +35,8 @@ function EventPage() {
           />
         ))}
       </div>
-    </div>
-  )
+    </PageLayout>
+  );
 }
 
-export default EventPage
+export default EventPage;
