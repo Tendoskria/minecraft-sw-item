@@ -50,7 +50,7 @@ function SearchResultsPage() {
       <div className="mb-4 text-gray-400 text-sm">
         Found {items.length} result{items.length !== 1 ? 's' : ''}
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-h-[500px] overflow-y-auto">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-4">
         {items.map(item => (
           <ItemCard
             key={item.id}

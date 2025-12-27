@@ -24,20 +24,25 @@ function PageLayout({
   children,
 }: PageLayoutProps) {
   return (
-    <div>
-      <Breadcrumb items={breadcrumbItems} />
-
-      <div className="mb-6">
-        <h1 className="text-4xl font-bold mb-2">{title}</h1>
+    <div className="h-full flex flex-col">
+      {/* Fixed Header Section */}
+      <div className="flex-shrink-0">
+        <Breadcrumb items={breadcrumbItems} />
+        <div className="mb-6">
+          <h1 className="text-4xl font-bold mb-2">{title}</h1>
+        </div>
       </div>
 
-      {loading ? (
-        <Loader />
-      ) : isEmpty ? (
-        <p className="text-gray-400 text-center">{emptyMessage}</p>
-      ) : (
-        children
-      )}
+      {/* Scrollable Content Section */}
+      <div className="flex-1 overflow-y-auto">
+        {loading ? (
+          <Loader />
+        ) : isEmpty ? (
+          <p className="text-gray-400 text-center">{emptyMessage}</p>
+        ) : (
+          children
+        )}
+      </div>
     </div>
   );
 }

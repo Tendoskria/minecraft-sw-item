@@ -48,7 +48,7 @@ function EventItemsPage() {
       isEmpty={items.length === 0}
       emptyMessage="No items found"
     >
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-h-[500px] overflow-y-auto">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pb-4">
         {items.map(item => (
           <ItemCard
             key={item.id}
