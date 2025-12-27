@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom"
+import BurgerMenu from "../components/BurgerMenu"
 
 function MainLayout() {
   return (
@@ -28,6 +29,9 @@ function MainLayout() {
 
         {/* Bottom left rectangle */}
         <div className="absolute bottom-10 left-0 bg-[#F16736] h-[3%] w-[16%]"></div>
+
+        {/* Burger Menu */}
+        <BurgerMenu />
 
       </div>
     </div>
