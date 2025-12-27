@@ -1,18 +1,28 @@
+import { useNavigate } from "react-router-dom";
+
 interface ItemCardProps {
+  id: number;
   name: string;
   category?: string;
   vanillaImageUrl?: string;
 }
 
-function ItemCard({ name, category, vanillaImageUrl }: ItemCardProps) {
+function ItemCard({ id, name, category, vanillaImageUrl }: ItemCardProps) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/items/${id}`);
+  };
+
   return (
-    <div 
-      className="bg-[#3A3D44] rounded-lg p-4 hover:bg-[#43464E] transition-colors flex flex-col items-center text-center"
+    <div
+      onClick={handleClick}
+      className="bg-[#3A3D44] rounded-lg p-4 hover:bg-[#43464E] transition-colors flex flex-col items-center text-center cursor-pointer"
     >
       {/* Sprite Image */}
       <div className="w-16 h-16 mb-3 flex items-center justify-center">
         {vanillaImageUrl ? (
-          <img 
+          <img
             src={vanillaImageUrl}
             alt={name}
             className="max-w-full max-h-full object-contain pixelated"

@@ -52,6 +52,7 @@ function EventItemsPage() {
         {items.map(item => (
           <ItemCard
             key={item.id}
+            id={item.id}
             name={item.name}
             category={item.category}
             vanillaImageUrl={item.vanilla_image_url}
