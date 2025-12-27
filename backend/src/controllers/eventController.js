@@ -1,9 +1,9 @@
 const EventService = require('../services/eventService');
 
 class EventController {
-  async getAll(req, res, next) {
+  async findAllForCards(req, res, next) {
     try {
-      const events = await EventService.getAll();
+      const events = await EventService.findAllForCards();
       res.json(events);
     } catch (error) {
       next(error);
@@ -22,6 +22,18 @@ class EventController {
   async getById(req, res, next) {
     try {
       const event = await EventService.getById(req.params.id);
+      if (!event) {
+        return res.status(404).json({ error: 'Event not found' });
+      }
+      res.json(event);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async findByIdWithYear(req, res, next) {
+    try {
+      const event = await EventService.findByIdWithYear(req.params.id, req.params.year);
       if (!event) {
         return res.status(404).json({ error: 'Event not found' });
       }

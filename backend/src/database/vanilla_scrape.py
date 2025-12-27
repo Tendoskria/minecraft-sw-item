@@ -9,12 +9,11 @@ def get_object_details(url):
     # Requête pour obtenir le contenu de la page de l'objet
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
-    
    
     # Extraire le nom de l'objet
     name_tag = soup.find('div', class_='mcwiki-header infobox-title')
     if name_tag:
-        name = name_tag.text.strip()
+        name = name_tag.get_text(separator="\n").strip().split("\n")[0]
     else:
         name = "Nom inconnu"
     
@@ -23,7 +22,7 @@ def get_object_details(url):
     if div_sprite:
         sprite_tag = div_sprite.find('a', class_='mw-file-description image')
         if sprite_tag:
-            sprite_url = sprite_tag.get('href')
+            sprite_url = sprite_tag.get('href').split('/revision')[0]
         else:
             sprite_url = "Sprite introuvable"
     else:
@@ -60,8 +59,24 @@ def get_objects_list():
 if __name__ == "__main__":
     objects = get_objects_list()
     
-    # Afficher les résultats
+    # remove duplicates
+    seen = set()
+    unique_objects = []
     for obj in objects:
-        print(f"Nom : {obj['name']}")
-        print(f"Sprite URL : {obj['sprite_url']}")
-        print("-" * 50)
+        identifier = obj['name']
+        if identifier not in seen:
+            seen.add(identifier)
+            unique_objects.append(obj)
+    objects = unique_objects
+    
+    # Remove objects with "introuvable" in   sprite_url
+    objects = [obj for obj in objects if "introuvable" not in obj['sprite_url']]
+    
+    statements = []
+    for obj in objects:
+        # INSERT INTO item_vanilla (item_name, image_url) VALUES ($1, $2) ON CONFLICT (item_name) DO NOTHING,
+        statements.append((obj['name'].replace("'", "''"), obj['sprite_url']))
+    
+    with open('backend/src/database/vanilla_items.sql', 'w', encoding='utf-8') as f:
+        for name, sprite_url in statements:
+            f.write(f"INSERT INTO item_vanilla (item_name, image_url) VALUES ('{name}', '{sprite_url}') ON CONFLICT (item_name) DO NOTHING;\n")

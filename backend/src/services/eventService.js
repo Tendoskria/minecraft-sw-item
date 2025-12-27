@@ -1,8 +1,8 @@
 const EventModel = require('../models/eventModel');
 
 class EventService {
-  async getAll() {
-    return await EventModel.findAll();
+  async findAllForCards() {
+    return await EventModel.findAllForCards();
   }
 
   async getGrouped() {
@@ -26,6 +26,10 @@ class EventService {
 
   async getById(id) {
     return await EventModel.findById(id);
+  }
+
+  async findByIdWithYear(id, year) {
+    return await EventModel.findByIdWithYear(id, year);
   }
 
   async create(data) {

@@ -3,7 +3,7 @@ const pool = require('../config/database');
 class ItemModel {
   async findAll(filters = {}) {
     let query = `
-      SELECT i.*, iv.item_name as vanilla_name, e.year, e.event_name
+      SELECT i.*, e.event_name, iv.item_name as vanilla_name, iv.image_url as vanilla_image_url
       FROM item i
       LEFT JOIN item_vanilla iv ON i.id_item_vanilla = iv.id
       LEFT JOIN event e ON i.id_event = e.id
@@ -20,7 +20,7 @@ class ItemModel {
     }
     
     if (filters.year) {
-      query += ` AND e.year = $${paramCount}`;
+      query += ` AND i.year = $${paramCount}`;
       params.push(filters.year);
       paramCount++;
     }
@@ -39,7 +39,7 @@ class ItemModel {
 
   async search(query) {
     const result = await pool.query(`
-      SELECT DISTINCT i.*, iv.item_name as vanilla_name, e.year, e.event_name
+      SELECT DISTINCT i.*, iv.item_name as vanilla_name, i.year, e.event_name
       FROM item i
       LEFT JOIN item_vanilla iv ON i.id_item_vanilla = iv.id
       LEFT JOIN event e ON i.id_event = e.id
@@ -54,7 +54,7 @@ class ItemModel {
 
   async findById(id) {
     const result = await pool.query(`
-      SELECT i.*, iv.item_name as vanilla_name, e.year, e.event_name
+      SELECT i.*, iv.item_name as vanilla_name, i.year, e.event_name
       FROM item i
       LEFT JOIN item_vanilla iv ON i.id_item_vanilla = iv.id
       LEFT JOIN event e ON i.id_event = e.id
