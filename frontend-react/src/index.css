@@ -1,1 +1,56 @@
 @import "tailwindcss";
+
+/* Add this to your index.css or App.css file */
+
+/* Custom Scrollbar Styling */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 12px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: rgba(33, 36, 45, 0.4);
+  border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #F16736;
+  border-radius: 10px;
+  border: 2px solid rgba(33, 36, 45, 0.4);
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #ff7847;
+}
+
+/* Firefox scrollbar */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #F16736 rgba(33, 36, 45, 0.4);
+}
+
+/* Alternative: Minimal/Hidden Scrollbar Design */
+/* Uncomment below and comment out above if you prefer a more subtle approach */
+
+/*
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: rgba(241, 103, 54, 0.5);
+  border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: rgba(241, 103, 54, 0.8);
+}
+
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(241, 103, 54, 0.5) transparent;
+}
+*/

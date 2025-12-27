@@ -39,7 +39,6 @@ app.get('/', async (req, res) => {
     const eventsResponse = await api.get('/events/grouped');
     const events = eventsResponse.data;
     
-    console.log('Loaded events:', events);
     res.render('index', { 
       events,
       title: 'Item event SW'
@@ -56,7 +55,6 @@ app.get('/', async (req, res) => {
 
 // Page de détails d'un event
 app.get('/event/:eventName/:year', async (req, res) => {
-  console.log('Loading items for event:', req.params);
   try {
     const { eventName, year } = req.params;
     const itemsResponse = await api.get('/items', {
@@ -94,7 +92,6 @@ app.get('/item/:id', async (req, res) => {
     const itemResponse = await api.get(`/items/${req.params.id}`);
     const item = itemResponse.data;
     
-    console.log('Loaded item:', item);
     res.render('item', {
       item,
       title: item.name
@@ -182,7 +179,6 @@ app.post('/admin/event', async (req, res) => {
 app.post('/admin/item', async (req, res) => {
   try {
     const { itemName, vanillaItem, eventId, category, enchantments } = req.body;
-    console.log('Received item data:', req.body);
     // Parser les enchantements
     const enchantmentsList = enchantments ? enchantments.split('\n')
       .filter(line => line.trim())

@@ -26,7 +26,6 @@ function ItemPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("Fetching item with id:", itemId);
     if (!itemId) return;
 
     fetch(`http://localhost:3000/api/items/${itemId}`)
@@ -37,7 +36,6 @@ function ItemPage() {
       .then(data => {
         setItem(data);
         setLoading(false);
-        console.log("Fetched item data:", data);
       })
       .catch(() => {
         setLoading(false);
